@@ -30,7 +30,7 @@ class GUI:
 
     def goAhead(self, name, passw):
         #print(name+"\n"+passw)
-        main.login(name, passw)
+        chat.login(name, passw)
         t = threading.Thread(target=self.receive)
         t.start()
         self.layout(name)
@@ -127,19 +127,22 @@ class GUI:
         self.textCons.tag_config("user", foreground="red")
         count = 0
         while(True):
-            msgs = main.getmsgs()
-            if(msgs!=[]):
-                for a in msgs:
-                    self.textCons.config(state = NORMAL)
-                    self.textCons.insert(END, a["user"]+": "+a["text"]+"\n\n")
-                    unlen = len(a["user"])
-                    self.textCons.tag_add("user", "2.8", "1.13")#f"{count}.0", f"{count}.{unlen}")
-                    count += 2
-                    self.textCons.config(state = DISABLED)
-                    self.textCons.see(END)
-            time.sleep(3)
+            try:
+                msgs = chat.getmsgs()
+                if(msgs!=[]):
+                    for a in msgs:
+                        self.textCons.config(state = NORMAL)
+                        self.textCons.insert(END, a["user"]+": "+a["text"]+"\n\n")
+                        unlen = len(a["user"])
+                        self.textCons.tag_add("user", "2.8", "1.13")#f"{count}.0", f"{count}.{unlen}")
+                        count += 2
+                        self.textCons.config(state = DISABLED)
+                        self.textCons.see(END)
+                time.sleep(3)
+            except:
+                print("error in receive")
 
     def sendMessage(self):
-        main.sendmsg(self.msg)
+        chat.sendmsg(self.msg)
 
 g = GUI()
